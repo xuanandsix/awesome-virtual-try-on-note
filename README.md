@@ -1,5 +1,10 @@
 虚拟试穿笔记
-## Virtual Try-on
+
+[Virtual Try-on](#Virtual-Try-on)
+
+[IDM-VTON](#IDM-VTON)
+
+## Virtual Try-on <a name="Virtual-Try-on"></a>
 **虚拟试穿**: 虚拟试穿是通过虚拟的技术手段，不需要真实穿戴，实现变装效果。该技术同时可以扩展到鞋子，眼镜，包等。
 
 **关键挑战**：将服装与各种姿势或手势的人体相匹配，而不会在服装中产生图案和纹理的任何扭曲。
@@ -14,7 +19,7 @@
 - [x] IDM-VTON
       
 ---
-## IDM-VTON: Improving Diffusion Models for Authentic Virtual Try-on in the Wild (in 2024 ECCV)
+## IDM-VTON: Improving Diffusion Models for Authentic Virtual Try-on in the Wild (in 2024 ECCV) <a name="IDM-VTON"></a>
 [项目地址](https://idm-vton.github.io/) [代码地址](https://github.com/yisol/IDM-VTON) [demo](https://huggingface.co/spaces/yisol/IDM-VTON) </br>
 论文中提出了一种改进的扩散模型 (Improved Diffusion Models for Virtual Try-ON, 简称IDM–VTON)，使其应用在真实世界场景下虚拟试穿任务。该模型显著提高了服装图像的一致性，可以生成真实的虚拟试穿图像。
 
