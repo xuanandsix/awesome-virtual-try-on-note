@@ -33,15 +33,17 @@ Latent Diffusion Models (LDMs) 主要目的是将图像输入映射到由预先�
 <img src="./assets/loss.png" height="50%" width="50%">
 </div>
 
-其中 $t ∈ \{1, ..., T \}$ 表示前向扩散过程的时间步长。在训练阶段，潜空间表示 $z_t$ 来自编码器$ε$，并给 $z_t$ 添加了高斯噪声$\epsilon \sim \mathcal{N}(0,1)$，损失函数就是在计算**添加噪声和噪声预测的平方差**。之后，从分布 $p(z)$ 中提取的潜空间样本，只需使用一次解码器 $D$ 将其翻译回图像域。
+其中 $t ∈ \{1, ..., T \}$ 表示前向扩散过程的时间步长。在训练阶段，潜空间表示 $z_t$ 来自编码器 $ε$ ，并给 $z_t$ 添加了高斯噪声 $\epsilon \sim \mathcal{N}(0,1)$ ，损失函数就是在计算**添加噪声和噪声预测的平方差**。之后，从分布 $p(z)$ 中提取的潜空间样本，只需使用一次解码器 $D$ 将其翻译回图像域。
 
 #### 2 扩散校正和估计自适应模型(DREAM)
-DREAM是一种训练策略，图像超分辨率任务中可以巧妙地寻找最小化失真和保持高图像质量之间的平衡。在训练期间，扩散模型用于预测添加的噪声$ε_θ$。$ε_θ$ 与原始添加的噪声 $ε$ 相结合以获得 $\bar{ε}$，用于计算 $\hat{z}_t$：
+DREAM是一种训练策略，图像超分辨率任务中可以巧妙地寻找最小化失真和保持高图像质量之间的平衡。在训练期间，扩散模型用于预测添加的噪声 $ε_θ$ 。 $ε_θ$ 与原始添加的噪声 $ε$ 相结合以获得 $\bar{ε}$ ，用于计算 $\hat{z}_t$ ：
 <div align=center>
 <img src="./assets/DREAM.png" height="45%" width="45%">
 </div>
 
-其中 $λ$ 是调整 $ε_θ$ 强度的参数， $\bar{\alpha}_{t} = \prod_{i = 1}^{t} 1 - \beta_{i}$, 方差调度器 （variance scheduler）$\{\beta_{t} \in (0, 1)\}_{t = 1}^{T}$。DREAM 的训练目标如下
+其中 $λ$ 是调整 $ε_θ$ 强度的参数， $\bar{\alpha}_{t}$ 
+
+$= \prod_{i = 1}^{t} 1 - \beta_{i}$ ，方差调度器 （variance scheduler） $\{\beta_{t} \in (0, 1)\}_{t = 1}^{T}$ 。DREAM 的训练目标如下
 
 <div align=center>
 <img src="./assets/DREAM_loss.png" height="70%" width="70%">
@@ -72,42 +74,42 @@ VAE 编码器 （冻结参数） 负责将输入图像编码为潜空间表示�
 
 #### 简化推理过程 (Simplified Inference)
 推理过程只需人物图像、服装参考图和与服饰无关的掩码图（指生成的mask与服装是无关的，一般通过扩大mask区域获得）即可完成。
-给定一个目标人物图像 $I_p \in \mathbb{R}^{3 \times H \times W}$ 和与服装无关的二进制掩码$M \in \mathbb{R}^{H \times W}$，一个与服饰无关的人物图像 $I_m$通过以下方式获得：
+给定一个目标人物图像 $I_p \in \mathbb{R}^{3 \times H \times W}$ 和与服装无关的二进制掩码 $M \in \mathbb{R}^{H \times W}$ ，一个与服饰无关的人物图像 $I_m$ 通过以下方式获得：
 
 <div align=center>
 <img src="./assets/math0.png" height="15%" width="15%">
 </div>
 
-$⊗$ 表示逐元素 (Hadamard, 阿达玛) 乘积。再将与服饰无关的人物图像$I_m$和服装参考(目标服装图或穿着目标服装的人图像)$Ig\in \mathbb{R}^{3 \times H \times W}$通过VAE编码器$ε$编码到潜空间中:
+$⊗$ 表示逐元素 (Hadamard, 阿达玛) 乘积。再将与服饰无关的人物图像 $I_m$ 和服装参考(目标服装图或穿着目标服装的人图像) $Ig\in \mathbb{R}^{3 \times H \times W}$ 通过VAE编码器 $ε$ 编码到潜空间中:
 
 <div align=center>
 <img src="./assets/math1.png" height="15%" width="15%">
 </div>
 
-$Xm$, $Xg\in \mathbb{R}^{4 \times \frac{H}{8} \times \frac{W}{8}}$，$M$也通过插值的方式以匹配潜空间的大小，得到特征$m\in\mathbb{R}^{\frac{H}{8} \times \frac{W}{8}}$。$m$ 和 $X_g$沿空间维度连接，形成$X_{c}\in\mathbb{R}^{8\times\frac{H}{8} \times \frac{W}{8}}$。
+$Xm$, $Xg \in \mathbb{R}^{4 \times \frac{H}{8} \times \frac{W}{8}}$ ， $M$ 也通过插值的方式以匹配潜空间的大小，得到特征 $m\in\mathbb{R}^{\frac{H}{8} \times \frac{W}{8}}$。 $m$ 和 $X_{g}$ 沿空间维度连接，形成 $X_{c}\in\mathbb{R}^{8\times\frac{H}{8} \times \frac{W}{8}}$ 。
 
-掩码 $m$ 与相同大小的全零掩码连接，得到$m_{c}\in\mathbb{R}^{8\times\frac{H}{8} \times \frac{W}{8}}$：
+掩码 $m$ 与相同大小的全零掩码连接，得到 $m_{c}\in\mathbb{R}^{8\times\frac{H}{8} \times \frac{W}{8}}$：
 
 <div align=center>
 <img src="./assets/math2.png" height="15%" width="15%">
 </div>
 
-其中$©$表示沿空间维度的连接操作，$O$表示全零掩码。</br>
-去噪时，$X_c$、$m_c$ 和与 $X_c$ 相同大小的随机噪声 $z_T ∼ N (0, 1)$ 沿通道维度连接并输入到去噪 UNet 以获得预测的 $z_{T - 1}$，这个过程重复 $T$ 次以预测最终的潜在 $z_0$。去噪过程可以写成
+其中 $©$ 表示沿空间维度的连接操作， $O$ 表示全零掩码。</br>
+去噪时， $X_c$ 、 $m_c$  和与  $X_c$ 相同大小的随机噪声 $z_T ∼ N (0, 1)$ 沿通道维度连接并输入到去噪 UNet 以获得预测的 $z_{T - 1}$，这个过程重复 $T$ 次以预测最终的潜在 $z_0$。去噪过程可以写成
 
 <div align=center>
 <img src="./assets/math3.png" height="30%" width="30%">
 </div>
 
-其中$⊙$表示沿通道维度的连接操作，通过在空间维度上对$z_{0}\in \mathbb{R}^{8\times\frac{H}{8}\times\frac{W}{8}}$裁剪提取人像部分$z^{p}_{0}\in \mathbb{R}^{4\times\frac{H}{8}\times\frac{W}{8}}$。最后使用VAE解码器$D$将去噪的潜空间表达转换回图像空间。
+其中 $⊙$ 表示沿通道维度的连接操作，通过在空间维度上对 $z_{0}\in \mathbb{R}^{8\times\frac{H}{8}\times\frac{W}{8}}$ 裁剪提取人像部分 $z^{p}_{0}\in \mathbb{R}^{4\times\frac{H}{8}\times\frac{W}{8}}$ 。最后使用VAE解码器 $D$ 将去噪的潜空间表达转换回图像空间。
 
 
 
 ### 实验
 **模型**：StableDiffusion v1.5修复模型。
-**数据**：VITON-HD, DressCode, and DeepFashion 三个数据集，所有图像调整到$1024×768$大小。
+**数据**：VITON-HD, DressCode, and DeepFashion 三个数据集，所有图像调整到 $1024×768$ 大小。
 **参数**: 
-1) 对于VitonHD 和 DressCode数据集训练了两个模型, 设置优化器为AdamW，分辨率$512×384$，batchsize大小为128，恒定学习率1e-5训练16,000步。训练时 DREAM 参数 p = 10。
+1) 对于VitonHD 和 DressCode数据集训练了两个模型, 设置优化器为AdamW，分辨率 $512×384$ ，batchsize大小为128，恒定学习率1e-5训练16,000步。训练时 DREAM 参数 p = 10。
 
 2) 对于多任务，包括分辨率 1024×768 的服装图 (in-shop) 和人物穿着服装 （worn garments），除了batchsize为32，训练48,000步，其他设置和 1) 相同。
 
