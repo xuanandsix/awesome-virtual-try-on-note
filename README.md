@@ -12,5 +12,5 @@
 
 以下是对一些论文或项目的知识总结（持续更新中）
 
-- [x] CAT-VTON
-- [x] IDM-VTON
+- [x] CAT-VTON [前往论文笔记](https://github.com/xuanandsix/awesome-virtual-try-on-note/tree/main/CAT-VTON)
+- [x] IDM-VTON [前往论文笔记](https://github.com/xuanandsix/awesome-virtual-try-on-note/tree/main/IDM-VTON)
