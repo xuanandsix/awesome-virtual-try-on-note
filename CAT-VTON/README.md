@@ -106,9 +106,9 @@ $Xm$, $Xg \in \mathbb{R}^{4 \times \frac{H}{8} \times \frac{W}{8}}$ ， $M$ 也�
 
 
 ### 实验
-**模型**：StableDiffusion v1.5修复模型。
-**数据**：VITON-HD, DressCode, and DeepFashion 三个数据集，所有图像调整到 $1024×768$ 大小。
-**参数**: 
+**模型**：StableDiffusion v1.5修复模型。</br>
+**数据**：VITON-HD, DressCode, and DeepFashion 三个数据集，所有图像调整到 $1024×768$ 大小。</br>
+**参数**: </br>
 1) 对于VitonHD 和 DressCode数据集训练了两个模型, 设置优化器为AdamW，分辨率 $512×384$ ，batchsize大小为128，恒定学习率1e-5训练16,000步。训练时 DREAM 参数 p = 10。
 
 2) 对于多任务，包括分辨率 1024×768 的服装图 (in-shop) 和人物穿着服装 （worn garments），除了batchsize为32，训练48,000步，其他设置和 1) 相同。
