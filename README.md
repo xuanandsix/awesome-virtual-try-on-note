@@ -14,3 +14,8 @@
 
 - [x] CAT-VTON [前往论文笔记](https://github.com/xuanandsix/awesome-virtual-try-on-note/tree/main/CAT-VTON)
 - [x] IDM-VTON [前往论文笔记](https://github.com/xuanandsix/awesome-virtual-try-on-note/tree/main/IDM-VTON)
+
+|方法|试穿模型|辅助模型|文本提示词|可训练参数|
+|:--:|:--:|:--:|:--:|:--:|
+|CAT-VTON|SD1.5修复模型UNet|无|无|Self Attention|
+|IDM-VTON|SDXL修复模型UNet|GarmentNet、IP-Adapter|包括款式、袖长等详细提示词|修复模型UNet、IP-Adapter|
